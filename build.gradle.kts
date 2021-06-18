@@ -69,3 +69,9 @@ kotlin {
         }
     }
 }
+
+task("runOnJVM", JavaExec::class) {
+    group = "run"
+    mainClass.set(mainClassName)
+    classpath = configurations["jvmRuntimeClasspath"] + kotlin.targets["jvm"].compilations["main"].output.allOutputs
+}
