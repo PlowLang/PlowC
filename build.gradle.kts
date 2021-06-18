@@ -7,6 +7,7 @@ version = "0.0.0"
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 val mainClassName = "MainKt"
@@ -55,10 +56,15 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting
+        val commonMain by getting {
+            dependencies {
+                implementation("com.drjcoding.plow:Plow:0.0.0")
+            }
+        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+                implementation("com.drjcoding.plow:Plow:0.0.0")
             }
         }
     }
