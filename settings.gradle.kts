@@ -1,3 +1,1 @@
-
-rootProject.name = "PlowC"
-
+rootProject.name = "plowc"
