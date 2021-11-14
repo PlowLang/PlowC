@@ -47,14 +47,6 @@ kotlin {
         }
     }
 
-    js(LEGACY) {
-        browser {
-            commonWebpackConfig {
-                cssSupport.enabled = true
-            }
-        }
-    }
-
     sourceSets {
         val commonMain by getting {
             dependencies {
