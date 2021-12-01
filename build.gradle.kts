@@ -51,7 +51,7 @@ kotlin {
         val okioVersion = "3.0.0"
         val commonMain by getting {
             dependencies {
-                implementation("com.drjcoding.plow:Plow:0.0.2")
+                implementation("com.drjcoding.plow:Plow:0.0.0")
                 implementation("com.squareup.okio:okio:$okioVersion")
                 implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.10")
             }
@@ -59,7 +59,7 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation("com.drjcoding.plow:Plow:0.0.2")
+                implementation("com.drjcoding.plow:Plow:0.0.0")
                 implementation("com.squareup.okio:okio:$okioVersion")
                 implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.10")
             }
