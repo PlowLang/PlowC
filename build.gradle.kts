@@ -1,5 +1,5 @@
 plugins {
-    kotlin("multiplatform") version "1.5.20"
+    kotlin("multiplatform") version "1.6.20"
 }
 
 group = "com.drjcoding.plowc"
@@ -48,19 +48,19 @@ kotlin {
     }
 
     sourceSets {
-        val okioVersion = "3.0.0"
         val commonMain by getting {
             dependencies {
                 implementation("com.drjcoding.plow:Plow:0.0.0")
-                implementation("com.squareup.okio:okio:$okioVersion")
                 implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.10")
+                implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.4")
+                implementation("com.squareup.okio:okio:3.1.0")
+                implementation ("com.github.ajalt.clikt:clikt:3.4.0")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
                 implementation("com.drjcoding.plow:Plow:0.0.0")
-                implementation("com.squareup.okio:okio:$okioVersion")
                 implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.10")
             }
         }
