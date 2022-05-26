@@ -12,7 +12,7 @@ ARCHIVED = NO
 
 CFLAGS = -Wall -Wextra -Oz
 CXXFLAGS = -Wall -Wextra -Oz
-LLFLAGS = -O3
+LLFLAGS = -O3 -fno-unroll-loops
 
 # ----------------------------
 

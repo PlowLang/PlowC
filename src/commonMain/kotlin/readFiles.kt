@@ -13,7 +13,8 @@ class TooManyPlowFilesError : PlowError(
 )
 
 data class CompilationFiles(
-    val plow: Path,
+    val base: Path,
+    val plow: List<Path>,
     val cLike: List<Path>
 )
 
@@ -34,12 +35,5 @@ fun readFiles(file: Path): CompilationFiles {
     } catch (e: Exception) {
     }
 
-    when (plow.size) {
-        0 -> throw NoPlowFileError()
-        1 -> return CompilationFiles(
-            plow[0],
-            cLike
-        )
-        else -> throw TooManyPlowFilesError()
-    }
+    return CompilationFiles(file, plow, cLike)
 }

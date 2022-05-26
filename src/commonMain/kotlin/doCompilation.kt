@@ -1,14 +1,47 @@
 import com.drjcoding.plow.issues.runCatchingExceptionsAsPlowResult
 import com.drjcoding.plow.project.FolderStructure
 import com.drjcoding.plow.project.RawPlowProject
+import com.drjcoding.plow.source_abstractions.SourceString
 import com.drjcoding.plow.source_abstractions.toSourceString
 import okio.Path
 
-private fun simpleFileStructure(file: Path): RawPlowProject {
-    return FolderStructure.File(
-        "file".toSourceString(),
-        SYSTEM.read(file) { readUtf8() }.replace("\t", "    ")
+private fun readFile(file: Path): String =
+    SYSTEM.read(file) { readUtf8() }.replace("\t", "    ")
+
+private fun folderStructureFromSectionList(resultFolderName: String, filesWithText: Map<List<String>, String>): FolderStructure<String> {
+    val filePaths = filesWithText.keys
+
+    val baseFiles = filePaths
+        .filter { it.size == 1 }
+        .map { it.first() }
+        .map {
+            val name = it.removeSuffix(".plow").toSourceString()
+            val text = filesWithText[listOf(it)]!!
+            FolderStructure.File(name, text)
+        }
+
+    val nextFolderNames = filePaths.filter { it.size != 1 }.map { it.first() }.toSet()
+    val resultingFolders = nextFolderNames.map { thisFolderName ->
+        val filesInFolder = filePaths
+            .filter { it.size != 1 && it.first() == thisFolderName }
+            .associate { it.subList(1, it.size) to filesWithText[it]!! }
+        folderStructureFromSectionList(thisFolderName, filesInFolder)
+    }
+
+    return FolderStructure.Folder(
+        resultFolderName.toSourceString(),
+        baseFiles + resultingFolders
     )
+}
+
+private fun simpleFileStructure(base: Path, files: List<Path>): RawPlowProject {
+    val baseFolders = base.segments
+    val filesText = files.associate {
+        val segments = it.segments
+        segments.subList(baseFolders.size, segments.size) to readFile(it)
+    }
+
+    return folderStructureFromSectionList(baseFolders.last(), filesText)
 }
 
 private fun writeFiles(args: CompilationArgs, plowLLVM: String, cLike: List<Path>) {
@@ -46,7 +79,7 @@ fun doCompilation(args: CompilationArgs) =
     runCatchingExceptionsAsPlowResult {
         println("--- Compiling Plow ---")
         val files = readFiles(args.srcFolder)
-        val plowLLVM = generateLLVM(simpleFileStructure(files.plow)).unwrapThrowingErrors()
+        val plowLLVM = generateLLVM(simpleFileStructure(files.base, files.plow)).unwrapThrowingErrors()
         writeFiles(args, plowLLVM, files.cLike)
 
         println("--- Compiling C and Linking ---")
